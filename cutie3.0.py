@@ -1,32 +1,4 @@
-<<<<<<< HEAD
-import pyttsx3  # pip install pyttsx3
-import speech_recognition as sr  # pip install SpeechRecognition
-import datetime
-import wikipedia  # pip install wikipedia
-import webbrowser
-import os
-import smtplib
-import random
-import subprocess
-import time
-import json
-import re
-import getpass
-import socket
-import datetime
-import logging
-from typing import Optional, Dict
-from urllib.request import urlopen
-
-
- #pip install PyAudio
-
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-# print(voices[1].id)
-engine.setProperty('voice', voices[1].id)
-# Function to check microphone and speaker functionality
-=======
+# Cuti 3.0 - An Advanced Voice Assistant
 import speech_recognition as sr
 import pyttsx3
 import time
@@ -56,19 +28,22 @@ sys.stdout.reconfigure(encoding='utf-8')
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)  # You can change 1 to 0 for a male voice
-
->>>>>>> 0a2acfb (last commit)
+engine.setProperty('rate', 150)  # Set speaking rate
+# --- Setup logging ---
+logging.basicConfig(level=logging.INFO)
+# Create a log file with timestamp
+if not os.path.exists('cuti_assistant.log'):
+    with open('cuti_assistant.log', 'w') as f:
+        pass  # Create the log file if it doesn't exist
+# Configure logging to write to a file
 
 logging.basicConfig(filename='cuti_assistant.log', level=logging.INFO, 
                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configuration file
 CONFIG = {
-<<<<<<< HEAD
-    "music_dir": os.path.expanduser("~/Music/nepali_songs"),
-=======
+    "version": "3.0",
     "music_dir": os.path.expanduser("~/Music/"),
->>>>>>> 0a2acfb (last commit)
     "app_paths": {
         "code": [
             "C:\\Users\\{}\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
@@ -117,62 +92,7 @@ def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
-<<<<<<< HEAD
-def check_microphone():
-    recognizer = sr.Recognizer()
-
-    try:
-        with sr.Microphone() as source:
-            print("Microphone test: Please say something...") 
-            speak("Microphone test: Please say something...")
-            recognizer.adjust_for_ambient_noise(source)
-            audio = recognizer.listen(source, timeout=2, )
-
-        print("Mic working. Recognizing...")
-        speak("Microphone test successful. Please wait while I recognize your speech.")
-        text = recognizer.recognize_google(audio)
-        print("Your said:", text)
-        speak("your said: " + text)
-        return True
-
-    except sr.WaitTimeoutError:
-        print("Mic timeout. No voice detected.")
-        speak("Microphone test failed. No voice detected.")
-        speak("Please ensure your microphone is connected and try again.")
-        return False
-    except sr.UnknownValueError:
-        print("Couldn't understand what you said.")
-        speak(" I couldn't understand what you said.")
-        return False
-    except sr.RequestError as e:
-        print(f"Could not connect to Google API: {e}")
-        speak("could not connect to Google API.")
-        speak("Please check your internet connection and try again.")
-        return False
-    except Exception as e:
-        print(f"Microphone error: {e}")
-        speak(f"Microphone error: {e}")
-        return False
-
-def check_speaker() -> bool:
-    """Test speaker functionality."""
-    try:
-        speak("Testing speaker. If you hear this, your speaker is working.")
-        print("Speaker test completed.")
-        logging.info("Speaker test passed")
-        return True
-    except Exception as e:
-        logging.error(f"Speaker error: {e}")
-        speak(f"Speaker error: {e}")
-        print(f"Speaker error: {e}")
-        return False
-
-def find_application(app_name: str) -> Optional[str]:
-=======
-
-
 def find_application(app_name: str) -> [str]:
->>>>>>> 0a2acfb (last commit)
     """Dynamically locate application paths."""
     user = os.getlogin()
     for path in CONFIG["app_paths"].get(app_name, []):
@@ -181,10 +101,6 @@ def find_application(app_name: str) -> [str]:
             return path
     return None        
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0a2acfb (last commit)
 def wishMe():
     hour = int(datetime.datetime.now().hour)
     if hour >= 0 and hour < 12:
@@ -198,56 +114,6 @@ def wishMe():
     speak("Hello, I am Cutie.")
     speak("I am a voice assistant. I can help you with simple tasks and answer questions.")
 
-<<<<<<< HEAD
-# --- Preload Joke Responses ---
-joke_responses = [
-    "Why don’t scientists trust atoms? Because they make up everything!",
-    "Why did the math book look sad? Because it had too many problems!",
-    "Why don’t programmers like nature? It has too many bugs.",
-    "What do you call fake spaghetti? An impasta!",
-    "Why did the scarecrow win an award? He was outstanding in his field!",
-    "Why don’t skeletons fight each other? They don’t have the guts.",
-    "Why was the computer cold? It forgot to close its Windows.",
-    "Why did the student eat his homework? Because the teacher told him it was a piece of cake!",
-    "Why was six afraid of seven? Because 7 8 9!",
-    "What did the janitor say when he jumped out of the closet? Supplies!"
-]
-
-# --- Preload Fact Responses ---
-fact_responses = [
-    "Octopuses have three hearts and can change color.",
-    "Bananas are berries, but strawberries aren't!",
-    "The shortest war in history lasted only 38 minutes.",
-    "Honey never spoils—you can eat 3000-year-old honey!",
-    "There are more stars in the universe than grains of sand on Earth.",
-    "Sharks existed before trees were even a thing.",
-    "Some cats are allergic to humans.",
-    "Your body has more bacterial cells than human ones.",
-    "The Eiffel Tower can grow taller in summer.",
-    "A bolt of lightning is five times hotter than the sun's surface."
-]
-
-# --- Preload Compliment Responses ---
-compliment_responses = [
-    "You're doing amazing, don't stop!",
-    "Your ideas are always so creative!",
-    "You're like a coding wizard!",
-    "You're a quick learner and it shows!",
-    "You've got great energy today!",
-    "You light up the room just by existing!",
-    "You’re smarter than you think!",
-    "I admire your dedication and hard work!",
-    "You’re full of good ideas!",
-    "You’re going to do great things!"
-]
-# --- Simple Chatbot Class ---
-# This class handles the chatbot's responses and chat history.
-
-class SimpleChatbot:
-    def __init__(self):
-        self.chat_history = []
-        self.language = "en"
-=======
 
 class Chatbot:
     def __init__(self, api_key: str):
@@ -259,7 +125,6 @@ class Chatbot:
         self.chat_history = []
         self.language = "en"
 
->>>>>>> 0a2acfb (last commit)
     def add_to_history(self, user_input: str, response: str):
         """Add user input and response to chat history."""
         self.chat_history.append({"user": user_input, "bot": response})
@@ -280,66 +145,7 @@ class Chatbot:
             self.language = "ne"
             return "भाषा नेपालीमा सेट गरियो।"
         else:
-<<<<<<< HEAD
             return f"Sorry, I don't support the language '{lang}' yet."
-
-    def get_response(self, user_input: str) -> str:
-        # --- Preload Joke Responses ---
-        responses = {
-            r"^tell me a joke$": lambda match: random.choice(joke_responses),
-            r"^tell me a fact$": lambda match: random.choice(fact_responses),
-            r"^give me a compliment$": lambda match: random.choice(compliment_responses),
-            r"^(hi|hello|hey)$": lambda match: "Hi there! What's up?",
-            r"^(how are you|how's it going|how r u)$": lambda match: "I'm doing awesome, thanks! How about you?",
-            r"^(what is your name|who are you)$": lambda match: "I'm Cuti, your smart little assistant!",
-            r"^(bye|exit|quit)$": lambda match: "Catch you later! Goodbye!",
-            r"^what time is it$": lambda match: f"The current time is {datetime.datetime.now().strftime('%H:%M:%S')}",
-            r"^what day is it$": lambda match: f"Today is {datetime.datetime.now().strftime('%A')}",
-
-            r"^(help|what can you do)$": "I can chat, open apps, search Wikipedia, play music, set reminders, do math, and more! Try saying 'tell me a joke' or 'open YouTube'.",
-            r"^what is the weather$": "I need a city name to check the weather. Say something like 'weather in New York'.",
-            r"^what is your purpose$": "I'm here to make your life easier with voice commands and fun chats!",
-            r"^tell me about yourself$": "I'm Cuti, built to assist with tasks, answer questions, and sprinkle some humor!",
-            r"^(fuck you|fuck u)$": "Whoa, let's keep it friendly! How can I help you now?",
-            r"^(i love you|love you)$": "Aww, that's sweet! I'm just a bot, but I appreciate the love!",
-            r"^who made you$": "I was created by Biplav to assist folks like you!",
-            r"^what time is it$": f"The current time is {datetime.datetime.now().strftime('%H:%M:%S')}.",
-            r"^what day is it$": f"Today is {datetime.datetime.now().strftime('%A')}.",
-            r"^how old are you$": "I'm timeless, but I was born in 2025, so I'm fresh and ready to help!",
-            r"^tell me a story$": "Once upon a time, a curious user asked Cuti for a story, and I spun a tale of adventure... Want a longer one?",
-            r"^what is love$": "Baby, don't hurt me, don't hurt me, no more! 😄 Love's a big topic—want a philosophical or funny take?",
-            r"^are you human$": "Nope, I'm a digital buddy, but I can chat like the best of 'em!",
-            r"^what is the meaning of life$": "42, according to Douglas Adams! Or maybe it's about finding joy—your pick!",
-            r"^set language to (\w+)$": self.set_language
-
-        }
-
-        for pattern, response in responses.items():
-            match = re.match(pattern, user_input)
-            if match:
-                if callable(response):
-                    return response(match)
-                return response
-
-        # Handle math calculations
-        if re.match(r"^(calculate|what is)\s+(.+)$", user_input):
-            calc_input = re.match(r"^(calculate|what is)\s+(.+)$", user_input).group(2)
-            try:
-                result = eval(calc_input, {"__builtins__": {}})
-                return f"The result is {result}."
-            except Exception:
-                return "Sorry, I couldn't calculate that. Try a simple math expression like '2 + 2'."
-
-        return "I didn't catch that. Try saying 'help' for ideas!"
-        
-
-    def reset_chat(self):
-        self.chat_history = []
-        speak("Chat history has been reset.")
-        print("Chat history has been reset.")
-=======
-            return f"Sorry, I don't support the language '{lang}' yet."    
-
 
     def get_response(self, user_input: str) -> str:
         """Get a response from the Mistral AI API for the given user input."""
@@ -376,29 +182,15 @@ class Chatbot:
         self.chat_history = []
         print("Chat history has been reset.")
         speak("Chat history has been reset.")
-        
-
->>>>>>> 0a2acfb (last commit)
 
 def listen_for_speech() -> str:
     r = sr.Recognizer()
     with sr.Microphone() as source:
-<<<<<<< HEAD
-       
-        print("Listening...")
-
-        r.pause_threshold = 4  # Adjust pause threshold for better recognition
-
-        try:
-            # 🛑 THIS is where the crash happens, so we wrap it in try-except
-            audio = r.listen(source, timeout=5, phrase_time_limit=10)
-=======
         print("Listening...")
         r.adjust_for_ambient_noise(source)
         try:
             # 🛑 THIS is where the crash happens, so we wrap it in try-except
             audio = r.listen(source, timeout=5, phrase_time_limit=5)
->>>>>>> 0a2acfb (last commit)
             return r.recognize_google(audio, language=CONFIG["language"])
         except sr.UnknownValueError:    
             print("Could not understand the audio.")
@@ -421,35 +213,6 @@ def listen_for_speech() -> str:
         print(f"Unexpected recognition error: {e}")
         speak("say something.")
         return ""
-
-<<<<<<< HEAD
-        
-    
-def main():
-    wishMe()
-    chatbot = SimpleChatbot()
-
-    while True:
-        user_message = ""
-        while not user_message:
-            user_message = listen_for_speech()
-            if not user_message:
-                speak("I didn't hear anything. Please try again.")
-                time.sleep(1)
-
-        if user_message.lower().strip() in ['exit', 'quit', 'bye']:
-            speak("Goodbye!")
-            break
-        elif user_message.lower().strip() == 'reset':
-            chatbot.reset_chat()
-            continue
-
-        response = chatbot.get_response(user_message)
-        print(f"Cuti: {response}")
-        speak(response)
-
-        query = user_message.lower()
-=======
 
 def main():
     wishMe()
@@ -484,17 +247,15 @@ def main():
         command_executed = False
 
         # === Task Commands ===
->>>>>>> 0a2acfb (last commit)
         if 'open wikipedia' in query:
             if not check_internet():
                 speak("No internet for Wikipedia search.")
                 continue
             query = query.replace("wikipedia", "").strip()
             try:
-<<<<<<< HEAD
-=======
+                speak(f"Searching Wikipedia for {query}")
+                print(f"Searching Wikipedia for {query}")
                 import wikipedia  # moved import here to avoid crash if not used
->>>>>>> 0a2acfb (last commit)
                 results = wikipedia.summary(query, sentences=2)
                 speak("According to Wikipedia")
                 print(results)
@@ -507,28 +268,6 @@ def main():
             except Exception as e:
                 speak("Error fetching Wikipedia data.")
                 logging.error(f"Wikipedia error: {e}")
-<<<<<<< HEAD
-
-        elif 'open youtube' in query:
-            speak("Opening YouTube")
-            print("Opening YouTube")
-            webbrowser.open("youtube.com")
-
-        elif 'open google' in query:
-            speak("Opening Google")
-            print("Opening Google")
-            webbrowser.open("google.com")
-
-        elif 'open spotify' in query:
-            speak("Opening Spotify")
-            print("Opening Spotify")
-            webbrowser.open("https://open.spotify.com")
-
-        elif 'play music' in query:
-            speak("Playing music")
-            print("Playing music")
-            music_dir = 'D:\\Non Critical\\songs\\nepali songs'
-=======
             command_executed = True
 
         elif 'open youtube' in query:
@@ -548,7 +287,6 @@ def main():
 
         elif 'play music' in query:
             music_dir = CONFIG["music_dir"]
->>>>>>> 0a2acfb (last commit)
             if os.path.exists(music_dir):
                 songs = os.listdir(music_dir)
                 if songs:
@@ -556,30 +294,17 @@ def main():
                     os.startfile(song_path)
                     speak("Playing music from your local directory.")
                 else:
-<<<<<<< HEAD
-                    speak("No songs found in the music directory.")
-            else:
-                speak("Music directory not found. Opening Spotify web player instead.")
-                webbrowser.open("https://open.spotify.com")
-=======
+
                     speak("No songs found in your music directory.")
             else:
                 speak("Music directory not found. Opening Spotify.")
                 webbrowser.open("https://open.spotify.com")
             command_executed = True
->>>>>>> 0a2acfb (last commit)
 
         elif 'what is the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
             speak(f"The time is {strTime}")
-<<<<<<< HEAD
-
-        elif 'open code' in query:
-            speak("Opening Visual Studio Code")
-            print("Opening Visual Studio Code")
-            codePath = "C:\\Users\\Biplav\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            os.startfile(codePath)
-=======
+            print(f"The time is {strTime}")
             command_executed = True
 
         elif 'open code' in query:
@@ -590,83 +315,36 @@ def main():
             else:
                 speak("Code editor not found.")
             command_executed = True
->>>>>>> 0a2acfb (last commit)
 
         elif 'email to biplav' in query:
             try:
                 speak("What should I say?")
                 content = listen_for_speech()
-<<<<<<< HEAD
-                to = "youremail@gmail.com"  # Replace with actual email
-=======
                 to = CONFIG["default_email"]
->>>>>>> 0a2acfb (last commit)
                 sendEmail(to, content)
                 speak("Email has been sent!")
             except Exception as e:
                 print(e)
-                speak("Sorry. I am not able to send this email.")
-<<<<<<< HEAD
-        elif 'open notepad' in query:
-            speak("Opening Notepad")
-            print("Opening Notepad")
-            notepadPath = "C:\\Windows\\System32\\notepad.exe"
-            os.startfile(notepadPath)           
-
+                speak("Sorry. I am not able to send this email.")    
 if __name__ == "__main__":
-    mic_ok = check_microphone()
-    speaker_ok = check_speaker()
-    if mic_ok and speaker_ok:
-        speak("All systems ready! Let's get started.")
-        logging.info("System check passed")
-=======
-            command_executed = True
-
-        elif 'open notepad' in query:
-            notepad_path = find_application("notepad")
-            if notepad_path:
-                os.startfile(notepad_path)
-                speak("Opening Notepad.")
-            else:
-                speak("Notepad not found.")
-            command_executed = True
-
-        # === Chatbot Fallback ===
-        if not command_executed:
-            response = chatbot.get_response(user_message)
-            chatbot.add_to_history(user_message, response)
-            print(f"You: {user_message}")
-            print(f"Cuti: {response}")
-            speak(response)
-
-    
-if __name__ == "__main__":
->>>>>>> 0a2acfb (last commit)
         load_config()
         if check_internet():        
             print("Internet is available. Starting Cutie Assistant...")
             speak("Internet is available. Starting Cutie Assistant...")
             main()
            
-        
-<<<<<<< HEAD
-    else:
-        speak("Hardware check failed. Please fix microphone or speaker issues.")
-        logging.error("System check failed")
-
-# Cuti 2.0 - An Advanced Voice Assistant
-=======
-    
+        else:
+            print("No internet connection. Please check your network settings.")
+            speak("No internet connection. Please check your network settings.")    
+# -*- coding: utf-8 -*- 
 # Cuti 3.0 - An Advanced Voice Assistant
->>>>>>> 0a2acfb (last commit)
 # This code is a more advanced version of the Cuti voice assistant, featuring improved error handling,
 # dynamic application path resolution, and enhanced chatbot capabilities.
+# The code includes features like speech recognition, text-to-speech, internet checks, and more.
+# It also supports a chatbot interface using the Mistral AI API, allowing for natural language interactions.
+# The code is designed to be modular and easily extensible, allowing for future enhancements and features.
+# The assistant can perform tasks like opening applications, sending emails, playing music, and answering questions
 
 
-<<<<<<< HEAD
-=======
 
-
-
-
->>>>>>> 0a2acfb (last commit)
+ 
