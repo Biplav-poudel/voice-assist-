@@ -334,9 +334,10 @@ if __name__ == "__main__":
             main()
            
         else:
-            print("No internet connection. Please check your network settings.")
-            speak("No internet connection. Please check your network settings.")    
-# -*- coding: utf-8 -*- 
+            speak("Internet connection is required.")
+    else:
+        speak("Please check your microphone or speaker.")
+
 # Cuti 3.0 - An Advanced Voice Assistant
 # This code is a more advanced version of the Cuti voice assistant, featuring improved error handling,
 # dynamic application path resolution, and enhanced chatbot capabilities.
