@@ -325,7 +325,14 @@ def main():
                 speak("Email has been sent!")
             except Exception as e:
                 print(e)
-                speak("Sorry. I am not able to send this email.")    
+                speak("Sorry. I am not able to send this email.")  
+            command_executed = True
+            continue
+            
+    response = chatbot.get_response(user_message)
+    print(f"Chatbot: {response}")
+    speak(response)        
+
 if __name__ == "__main__":
         load_config()
         if check_internet():        
@@ -333,11 +340,7 @@ if __name__ == "__main__":
             speak("Internet is available. Starting Cutie Assistant...")
             main()
            
-        else:
-            speak("Internet connection is required.")
-    else:
-        speak("Please check your microphone or speaker.")
-
+        
 # Cuti 3.0 - An Advanced Voice Assistant
 # This code is a more advanced version of the Cuti voice assistant, featuring improved error handling,
 # dynamic application path resolution, and enhanced chatbot capabilities.
