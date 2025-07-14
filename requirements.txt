@@ -1,0 +1,19 @@
+# Required libraries for Voice Assist
+
+# Core voice recognition and speech synthesis
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+pyaudio==0.2.13
+
+# Environment variable management
+python-dotenv==1.0.1
+
+# HTTP requests (optional, for APIs)
+requests==2.31.0
+
+# Build and packaging tools
+wheel
+setuptools
+
+# Install all at once:
+# pip install -r requirements.txt
